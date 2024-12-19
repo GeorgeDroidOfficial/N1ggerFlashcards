@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nigger Flashcards</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        h1, h2 {
+            color: #333;
+            margin: 20px;
+        }
+        #title-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
+        #study-options {
+            margin-top: 20px;
+        }
+        .study-option {
+            margin: 10px;
+            padding: 15px 30px;
+            font-size: 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.3s ease;
+        }
+        .study-option:hover {
+            background-color: #0056b3;
+            transform: scale(1.1);
+        }
+        #central-image {
+            width: 300px;
+            height: auto;
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        #flashcard-container {
+            margin: 20px auto;
+            padding: 40px;
+            width: 90%;
+            max-width: 800px;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            line-height: 1.6;
+            cursor: pointer;
+            color: #333;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        button {
+            margin: 10px;
+            padding: 15px 25px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+        #section-label, #progress {
+            margin-top: 10px;
+            font-size: 18px;
+            color: #555;
+        }
+        .hidden {
+            display: none;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Title Page -->
+    <div id="title-page">
+        <h1>Nigger Flashcards</h1>
+        <img id="central-image" src="https://assets.medpagetoday.net/media/images/86xxx/86913.jpg?width=0.8" alt="Central Image">
+        <div id="study-options">
+            <button class="study-option" onclick="loadFlashcards(3)">APUSH Period 3</button>
+            <button class="study-option" onclick="loadFlashcards(4)">APUSH Period 4</button>
+            <button class="study-option" onclick="loadFlashcards(5)">APUSH Period 5</button>
+        </div>
+    </div>
+
+    <!-- Flashcard Section -->
+    <div id="flashcard-section" class="hidden">
+        <h2 id="section-label">Reviewing All Cards</h2>
+        <div id="progress">Known: 0 / 3 (0%)</div>
+        <div id="flashcard-container" onclick="toggleCard()">Click to reveal definition</div>
+        <button onclick="prevCard()">Previous</button>
+        <button onclick="nextCard()">Next</button>
+        <button onclick="markKnown()">I Know It</button>
+        <button onclick="markUnknown()">I Don’t Know It</button>
+        <button id="review-unknown-button" onclick="reviewUnknown()">Review Unknown Cards</button>
+        <button id="review-known-button" onclick="reviewKnown()">Review Known Cards</button>
+        <button onclick="resetProgress()">Reset Progress</button>
+        <button onclick="goHome()">Home</button>
+    </div>
+
+    <script>
+        const flashcardSets = {
+            3: [
+            ["French and Indian War (1754–1763)", "Conflict between Britain and France over North American territory; led to British debt and increased taxation on the colonies."],
+            ["Proclamation of 1763", "British law that restricted colonial settlement west of the Appalachian Mountains to avoid conflicts with Native Americans."],
+            ["Stamp Act (1765)", "First direct tax on colonists for printed materials, sparking protests and the slogan 'No taxation without representation.'"],
+            ["Sons of Liberty", "A secret organization led by Samuel Adams to resist British policies, including organizing protests and the Boston Tea Party."],
+            ["Boston Tea Party (1773)", "Colonial protest against the Tea Act, where colonists dumped British tea into Boston Harbor, leading to the Coercive (Intolerable) Acts."],
+            ["Intolerable Acts (1774)", "British response to the Boston Tea Party, including closing Boston Harbor and reducing colonial self-government."],
+            ["First Continental Congress (1774)", "A meeting of colonial delegates to organize resistance against British policies and support Massachusetts."],
+            ["Declaration of Independence (1776)", "Written by Thomas Jefferson, it asserted the colonies' natural rights and listed grievances against King George III, justifying independence."],
+            ["Battle of Saratoga (1777)", "Turning point of the Revolutionary War; convinced France to ally with the colonies."],
+            ["Treaty of Paris (1783)", "Ended the Revolutionary War, recognized U.S. independence, and established U.S. boundaries."],
+            ["Articles of Confederation (1781)", "The first U.S. government framework; created a weak central government with no power to tax or regulate trade."],
+            ["Shays' Rebellion (1786–1787)", "Uprising of farmers protesting debt and taxes; highlighted weaknesses in the Articles of Confederation."],
+            ["Constitutional Convention (1787)", "Meeting to revise the Articles of Confederation; resulted in the drafting of the U.S. Constitution."],
+            ["Great Compromise", "Agreement to create a bicameral legislature with proportional representation in the House and equal representation in the Senate."],
+            ["Three-Fifths Compromise", "Agreement that three-fifths of the slave population would count for taxation and representation."],
+            ["Ratification of the Constitution (1788)", "Required nine states; Federalists supported it, while Anti-Federalists demanded a Bill of Rights."],
+            ["Bill of Rights (1791)", "First ten amendments to the Constitution, guaranteeing individual liberties such as freedom of speech and religion."],
+            ["Federalist Papers", "A series of essays by Hamilton, Madison, and Jay to support ratification of the Constitution."],
+            ["Washington’s Farewell Address (1796)", "Warned against political factions and permanent foreign alliances."],
+            ["Hamilton’s Financial Plan", "Proposed a national bank, assumption of state debts, and excise taxes to strengthen the U.S. economy."],
+            ["Alien and Sedition Acts (1798)", "Laws that restricted speech critical of the government and made it harder for immigrants to become citizens."],
+            ["Republican Motherhood", "Ideology that emphasized women’s role in raising virtuous, educated citizens to support the republic."],
+            ["Northwest Ordinance (1787)", "Established the process for admitting new states and banned slavery in the Northwest Territory."],
+            ["Loyalists", "Colonists who remained loyal to Britain during the Revolutionary War."],
+            ["Common Sense (1776)", "Pamphlet by Thomas Paine that argued for independence from Britain and influenced public opinion."],
+            ["Albany Plan of Union (1754)", "Proposal by Benjamin Franklin to unite the colonies for defense; rejected by both the colonies and Britain."],
+            ["Pontiac’s Rebellion (1763)", "Native American uprising against British expansion; prompted the Proclamation of 1763."],
+            ["Sugar Act (1764)", "Tax on sugar and molasses to raise revenue after the French and Indian War."],
+            ["Townshend Acts (1767)", "Taxes on imports like glass, paper, and tea; led to widespread boycotts and protests."],
+            ["Committees of Correspondence", "Colonial networks for communication and organizing resistance against British policies."],
+            ["Second Continental Congress (1775)", "Managed the Revolutionary War, created the Continental Army, and issued the Declaration of Independence."],
+            ["Battle of Yorktown (1781)", "Final major battle of the Revolutionary War; British General Cornwallis surrendered to George Washington."],
+            ["Virginia and Kentucky Resolutions (1798–1799)", "Declared the Alien and Sedition Acts unconstitutional, introducing the idea of nullification."],
+            ["Democratic-Republicans", "Political party led by Jefferson; supported states’ rights, an agrarian economy, and a strict interpretation of the Constitution."],
+            ["Federalists", "Political party led by Hamilton; supported a strong central government, industrial economy, and loose interpretation of the Constitution."]
+                // Add more flashcards for Period 3 here
+            ],
+            4: [
+        ["Election of 1800", "The first peaceful transfer of power between political parties, marking the start of Jeffersonian democracy."],
+        ["Louisiana Purchase (1803)", "Doubled the size of the United States and gave control of the Mississippi River; purchased from France for $15 million."],
+        ["Marbury v. Madison (1803)", "Established the principle of judicial review, allowing the Supreme Court to declare laws unconstitutional."],
+        ["Embargo Act (1807)", "Jefferson's policy that banned trade with all foreign nations, devastating the U.S. economy."],
+        ["War of 1812", "Conflict between the U.S. and Britain over issues like impressment and trade restrictions; resulted in increased nationalism."],
+        ["Hartford Convention (1814–1815)", "A meeting of Federalists opposing the War of 1812; its perceived disloyalty led to the party's decline."],
+        ["Treaty of Ghent (1814)", "Ended the War of 1812 and restored prewar boundaries without addressing U.S. grievances like impressment."],
+        ["Era of Good Feelings", "Period of political unity and national pride during James Monroe's presidency, marked by the decline of the Federalist Party."],
+        ["Missouri Compromise (1820)", "Compromise that admitted Missouri as a slave state and Maine as a free state, maintaining the balance of power in Congress."],
+        ["Monroe Doctrine (1823)", "U.S. foreign policy opposing European intervention in the Western Hemisphere, asserting American dominance in the region."],
+        ["Market Revolution", "Economic transformation marked by innovations in transportation, communication, and industry, leading to a shift to a market-based economy."],
+        ["Lowell System", "Labor system in New England factories that employed young women and provided them with housing and education."],
+        ["Nullification Crisis (1832–1833)", "Conflict over South Carolina's attempt to nullify federal tariffs, leading to a standoff with Andrew Jackson."],
+        ["Indian Removal Act (1830)", "Law signed by Andrew Jackson that forced Native American tribes to relocate west of the Mississippi River."],
+        ["Trail of Tears", "Forced relocation of the Cherokee and other tribes, resulting in thousands of deaths."],
+        ["Second Great Awakening", "Religious revival movement that emphasized individual salvation and inspired social reforms like abolition and temperance."],
+        ["Seneca Falls Convention (1848)", "The first women's rights convention in the U.S., organized by Elizabeth Cady Stanton and Lucretia Mott."],
+        ["American System", "Henry Clay's plan to promote economic growth through a national bank, protective tariffs, and internal improvements."],
+        ["Panic of 1837", "Severe economic depression caused by speculative lending practices and the failure of Jackson's pet banks."],
+        ["Jacksonian Democracy", "Expansion of voting rights to all white men, emphasizing the common man's role in government."],
+        ["Manifest Destiny", "The belief that the U.S. was destined to expand across the North American continent."],
+        ["Mexican-American War (1846–1848)", "Conflict over Texas and territorial expansion; resulted in the acquisition of vast territories in the West."],
+        ["Treaty of Guadalupe Hidalgo (1848)", "Ended the Mexican-American War; ceded California and much of the Southwest to the U.S."],
+        ["Gadsden Purchase (1853)", "Purchase of land from Mexico to facilitate construction of a southern transcontinental railroad."],
+        ["Abolitionist Movement", "Social and political effort to end slavery in the United States, led by figures like Frederick Douglass and William Lloyd Garrison."],
+        ["Temperance Movement", "Social movement aimed at reducing alcohol consumption, led by groups like the American Temperance Society."],
+        ["Transcendentalism", "Philosophical movement emphasizing individualism, nature, and self-reliance, led by Ralph Waldo Emerson and Henry David Thoreau."],
+        ["The Hudson River School", "Art movement focused on romantic landscapes and the natural beauty of America."],
+        ["Nat Turner's Rebellion (1831)", "Slave uprising in Virginia that heightened Southern fears of abolition and led to stricter slave laws."],
+        ["McCulloch v. Maryland (1819)", "Supreme Court case that upheld the constitutionality of the national bank and reinforced federal supremacy over states."],
+        ["Dartmouth College v. Woodward (1819)", "Supreme Court case that protected private contracts from state interference, strengthening corporate rights."],
+        ["The Corrupt Bargain (1824)", "Controversial deal in the presidential election of 1824 that led to John Quincy Adams' victory over Andrew Jackson."],
+        ["Spoils System", "Practice of rewarding political supporters with government jobs, popularized by Andrew Jackson."],
+        ["Tariff of Abominations (1828)", "High tariff that angered Southern states and led to the Nullification Crisis."],
+        ["Bank War", "Andrew Jackson's campaign to destroy the Second Bank of the United States, which he viewed as corrupt and elitist."]
+                // Add more flashcards for Period 4 here
+            ],
+            5: [
+        ["Manifest Destiny", "The belief that the U.S. was destined to expand across the North American continent."],
+        ["Mexican-American War (1846–1848)", "Conflict between the U.S. and Mexico over Texas and territorial expansion; resulted in the Treaty of Guadalupe Hidalgo."],
+        ["Treaty of Guadalupe Hidalgo (1848)", "Ended the Mexican-American War; ceded California and much of the Southwest to the U.S."],
+        ["Wilmot Proviso (1846)", "Proposed legislation to ban slavery in any territory acquired from Mexico; failed to pass."],
+        ["Compromise of 1850", "Agreement that admitted California as a free state, strengthened the Fugitive Slave Act, and allowed popular sovereignty in new territories."],
+        ["Fugitive Slave Act (1850)", "Law that required citizens to assist in the capture of runaway slaves; angered Northern abolitionists."],
+        ["Uncle Tom’s Cabin (1852)", "Harriet Beecher Stowe's novel that exposed the horrors of slavery and increased sectional tensions."],
+        ["Kansas-Nebraska Act (1854)", "Allowed settlers in Kansas and Nebraska to decide on slavery through popular sovereignty, overturning the Missouri Compromise."],
+        ["Bleeding Kansas", "Violent conflict in Kansas between pro-slavery and anti-slavery settlers following the Kansas-Nebraska Act."],
+        ["Dred Scott v. Sandford (1857)", "Supreme Court case that ruled African Americans were not citizens and Congress could not ban slavery in the territories."],
+        ["John Brown’s Raid (1859)", "Attempted slave revolt led by abolitionist John Brown at Harpers Ferry; heightened tensions between North and South."],
+        ["Lincoln-Douglas Debates (1858)", "Series of debates between Abraham Lincoln and Stephen Douglas over slavery and its expansion."],
+        ["Election of 1860", "Abraham Lincoln's election led to Southern secession and the start of the Civil War."],
+        ["Secession", "Southern states' withdrawal from the Union following Lincoln's election; formed the Confederate States of America."],
+        ["Fort Sumter (1861)", "First battle of the Civil War; Confederate forces fired on a Union fort in South Carolina."],
+        ["Emancipation Proclamation (1863)", "Issued by Lincoln, it declared all slaves in Confederate-held territory free, shifting the war’s focus to slavery."],
+        ["Battle of Gettysburg (1863)", "Turning point of the Civil War; Union victory that halted Confederate advances into the North."],
+        ["Gettysburg Address (1863)", "Lincoln’s speech emphasizing national unity, equality, and a new birth of freedom."],
+        ["Sherman’s March to the Sea (1864)", "Union General William T. Sherman's destructive campaign through Georgia, aiming to weaken Southern morale."],
+        ["Appomattox Court House (1865)", "Site where Confederate General Robert E. Lee surrendered to Union General Ulysses S. Grant, effectively ending the Civil War."],
+        ["13th Amendment (1865)", "Abolished slavery in the United States."],
+        ["14th Amendment (1868)", "Granted citizenship to all persons born or naturalized in the U.S. and guaranteed equal protection under the law."],
+        ["15th Amendment (1870)", "Prohibited voting restrictions based on race, color, or previous condition of servitude."],
+        ["Reconstruction", "Post-Civil War period focused on rebuilding the South and integrating freed slaves into society."],
+        ["Freedmen’s Bureau (1865)", "Government agency established to assist freed slaves with education, employment, and housing during Reconstruction."],
+        ["Black Codes", "Laws passed by Southern states to restrict the rights of African Americans and maintain white supremacy."],
+        ["Sharecropping", "Agricultural system where freedmen worked land for a share of the crops; often led to economic dependency."],
+        ["Radical Republicans", "Congressional faction that advocated for harsh Reconstruction policies and full rights for African Americans."],
+        ["Reconstruction Act (1867)", "Divided the South into military districts and required states to ratify the 14th Amendment and grant voting rights to African Americans to rejoin the Union."],
+        ["Impeachment of Andrew Johnson (1868)", "Attempt to remove President Johnson from office for violating the Tenure of Office Act; he was acquitted by one vote."],
+        ["Carpetbaggers", "Northern Republicans who moved to the South during Reconstruction to seek political and economic opportunities."],
+        ["Scalawags", "Southern whites who supported Reconstruction and the Republican Party."],
+        ["Ku Klux Klan (KKK)", "White supremacist group that used terror to oppose Reconstruction and suppress African American rights."],
+        ["Compromise of 1877", "Agreement that ended Reconstruction by withdrawing federal troops from the South in exchange for Rutherford B. Hayes becoming president."],
+        ["Civil Rights Act of 1866", "Law granting citizenship and equal protection under the law to African Americans; vetoed by Johnson but overridden by Congress."]
+                // Add more flashcards for Period 5 here
+            ]
+        };
+
+        let currentIndex = 0;
+        let showingTerm = true;
+        let currentFlashcards = [];
+        let knownCards = [];
+        let unknownCards = [];
+        let reviewingUnknown = false;
+        let reviewingKnown = false;
+
+        function loadFlashcards(period) {
+            currentFlashcards = [...flashcardSets[period]];
+            currentIndex = 0;
+            knownCards = [];
+            unknownCards = [];
+            reviewingUnknown = false;
+            reviewingKnown = false;
+            document.getElementById("title-page").classList.add("hidden");
+            document.getElementById("flashcard-section").classList.remove("hidden");
+            showCard();
+        }
+
+        function goHome() {
+            document.getElementById("title-page").classList.remove("hidden");
+            document.getElementById("flashcard-section").classList.add("hidden");
+        }
+
+        function updateProgress() {
+            const progress = document.getElementById("progress");
+            const knownCount = knownCards.length;
+            const totalCount = currentFlashcards.length;
+            const percentage = ((knownCount / totalCount) * 100).toFixed(1);
+            progress.textContent = `Known: ${knownCount} / ${totalCount} (${percentage}%)`;
+        }
+
+        function showCard() {
+            const card = document.getElementById("flashcard-container");
+            const label = document.getElementById("section-label");
+            card.textContent = showingTerm ? currentFlashcards[currentIndex][0] : currentFlashcards[currentIndex][1];
+            label.textContent = reviewingUnknown ? "Reviewing Unknown Cards" : reviewingKnown ? "Reviewing Known Cards" : "Reviewing All Cards";
+            updateProgress();
+        }
+
+        function toggleCard() {
+            showingTerm = !showingTerm;
+            showCard();
+        }
+
+        function nextCard() {
+            do {
+                currentIndex = (currentIndex + 1) % currentFlashcards.length;
+            } while (
+                (reviewingUnknown && !unknownCards.includes(currentFlashcards[currentIndex])) ||
+                (reviewingKnown && !knownCards.includes(currentFlashcards[currentIndex]))
+            );
+            showingTerm = true;
+            showCard();
+        }
+
+        function prevCard() {
+            do {
+                currentIndex = (currentIndex - 1 + currentFlashcards.length) % currentFlashcards.length;
+            } while (
+                (reviewingUnknown && !unknownCards.includes(currentFlashcards[currentIndex])) ||
+                (reviewingKnown && !knownCards.includes(currentFlashcards[currentIndex]))
+            );
+            showingTerm = true;
+            showCard();
+        }
+
+        function markKnown() {
+            const currentCard = currentFlashcards[currentIndex];
+            if (!knownCards.includes(currentCard)) {
+                knownCards.push(currentCard);
+                unknownCards = unknownCards.filter(card => card !== currentCard);
+            }
+            nextCard();
+        }
+
+        function markUnknown() {
+            const currentCard = currentFlashcards[currentIndex];
+            if (!unknownCards.includes(currentCard)) {
+                unknownCards.push(currentCard);
+                knownCards = knownCards.filter(card => card !== currentCard);
+            }
+            nextCard();
+        }
+
+        function reviewUnknown() {
+            if (unknownCards.length === 0) {
+                alert("No unknown cards to review.");
+                return;
+            }
+            currentFlashcards = [...unknownCards];
+            currentIndex = 0;
+            reviewingUnknown = true;
+            reviewingKnown = false;
+            showCard();
+        }
+
+        function reviewKnown() {
+            if (knownCards.length === 0) {
+                alert("No known cards to review.");
+                return;
+            }
+            currentFlashcards = [...knownCards];
+            currentIndex = 0;
+            reviewingKnown = true;
+            reviewingUnknown = false;
+            showCard();
+        }
+
+        function resetProgress() {
+            knownCards = [];
+            unknownCards = [];
+            reviewingUnknown = false;
+            reviewingKnown = false;
+            showCard();
+        }
+    </script>
+</body>
+</html>
